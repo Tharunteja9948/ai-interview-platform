@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Build Outputs
+frontend/dist/
+dist/
+build/
+
+# Vite & IDE
+.vite/
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+Thumbs.db
+.DS_Store
