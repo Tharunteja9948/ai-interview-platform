@@ -305,7 +305,8 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest):
         session_id=session_id,
         target_role=q_row["role"],
         current_difficulty=q_row["difficulty"],
-        interview_mode=payload.interview_mode
+        interview_mode=payload.interview_mode,
+        target_company=payload.company
     )
 
     # Strip ideal_answer from next recommended question so candidate cannot see it before answering

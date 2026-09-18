@@ -34,12 +34,16 @@ def select_next_adaptive_question(
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # 2. Find already asked question IDs in this session & student's recent history
+    # 2. Find already asked question IDs AND question texts in this session & student history
     cursor.execute("""
-        SELECT question_id FROM session_responses 
-        WHERE student_id = ?
-    """, (student_id,))
-    asked_ids = set(row[0] for row in cursor.fetchall())
+        SELECT r.question_id, q.question_text 
+        FROM session_responses r
+        LEFT JOIN questions q ON r.question_id = q.id
+        WHERE r.session_id = ? OR r.student_id = ?
+    """, (session_id, student_id))
+    asked_rows = cursor.fetchall()
+    asked_ids = set(row[0] for row in asked_rows if row[0])
+    asked_texts = set(row[1].strip().lower() for row in asked_rows if row[1])
 
     # Mode 1: Conventional Non-Adaptive Mode (Sequential catalog order)
     if interview_mode == "conventional":
@@ -47,11 +51,15 @@ def select_next_adaptive_question(
             SELECT id, role, category, question_text, ideal_answer, 
                    primary_competency, secondary_competency, difficulty, question_type
             FROM questions 
+            WHERE role = ?
             ORDER BY id ASC
-        """)
+        """, (target_role,))
         all_q = [dict(row) for row in cursor.fetchall()]
-        unasked = [q for q in all_q if q["id"] not in asked_ids]
-        chosen_question = unasked[0] if unasked else random.choice(all_q)
+        unasked = [
+            q for q in all_q 
+            if q["id"] not in asked_ids and q["question_text"].strip().lower() not in asked_texts
+        ]
+        chosen_question = unasked[0] if unasked else (all_q[0] if all_q else None)
         conn.close()
 
         adaptive_reason = (
@@ -61,7 +69,7 @@ def select_next_adaptive_question(
         return {
             "question": chosen_question,
             "targeted_competency": chosen_question["primary_competency"],
-            "student_score_for_competency": profile_data["competencies"][chosen_question["primary_competency"]]["score"],
+            "student_score_for_competency": profile_data["competencies"].get(chosen_question["primary_competency"], {}).get("score", 3.0),
             "adaptive_reason": adaptive_reason,
             "all_weaknesses": lowest_skills,
             "mode": "conventional"
@@ -71,7 +79,7 @@ def select_next_adaptive_question(
         get_senior_tip_for_question, get_detour_for_question
     )
 
-    # 3. Filter candidates targeting the primary weakness and specific role
+    # 3. Step A: Target primary weakness for specific role
     cursor.execute("""
         SELECT id, role, category, question_text, ideal_answer, 
                primary_competency, secondary_competency, difficulty, question_type,
@@ -85,10 +93,12 @@ def select_next_adaptive_question(
     """, (primary_weakness, primary_weakness, target_role, target_company or ''))
     candidates = [dict(row) for row in cursor.fetchall()]
 
-    # Filter out already asked questions
-    unasked_candidates = [q for q in candidates if q["id"] not in asked_ids]
+    unasked_candidates = [
+        q for q in candidates 
+        if q["id"] not in asked_ids and q["question_text"].strip().lower() not in asked_texts
+    ]
 
-    # If all primary weakness questions have been answered, look for secondary weakness
+    # Step B: If primary weakness questions are exhausted, target secondary weakness
     if not unasked_candidates:
         cursor.execute("""
             SELECT id, role, category, question_text, ideal_answer, 
@@ -102,9 +112,30 @@ def select_next_adaptive_question(
               live_priority_score DESC, difficulty ASC
         """, (secondary_weakness, secondary_weakness, target_role, target_company or ''))
         sec_candidates = [dict(row) for row in cursor.fetchall()]
-        unasked_candidates = [q for q in sec_candidates if q["id"] not in asked_ids]
+        unasked_candidates = [
+            q for q in sec_candidates 
+            if q["id"] not in asked_ids and q["question_text"].strip().lower() not in asked_texts
+        ]
 
-    # Fallback: synthesize fresh question for this role if none unasked
+    # Step C: If both are exhausted, select ANY unasked question for this role
+    if not unasked_candidates:
+        cursor.execute("""
+            SELECT id, role, category, question_text, ideal_answer, 
+                   primary_competency, secondary_competency, difficulty, question_type,
+                   live_priority_score, real_world_occurrences, target_company
+            FROM questions 
+            WHERE role = ?
+            ORDER BY 
+              CASE WHEN target_company = ? THEN 1 WHEN target_company = 'general' THEN 2 ELSE 3 END,
+              live_priority_score DESC, difficulty ASC
+        """, (target_role, target_company or ''))
+        all_role_candidates = [dict(row) for row in cursor.fetchall()]
+        unasked_candidates = [
+            q for q in all_role_candidates 
+            if q["id"] not in asked_ids and q["question_text"].strip().lower() not in asked_texts
+        ]
+
+    # Step D: Dynamic generation fallback (guaranteeing fresh unasked template)
     if not unasked_candidates:
         from backend.services.dynamic_question_service import get_or_create_round_question
         fresh_q = get_or_create_round_question(
@@ -113,6 +144,7 @@ def select_next_adaptive_question(
             target_competency=primary_weakness,
             difficulty=current_difficulty,
             excluded_ids=asked_ids,
+            excluded_texts=asked_texts,
             role_name=target_role
         )
         unasked_candidates = [fresh_q]

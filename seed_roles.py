@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 from backend.services.dynamic_question_service import ROLE_QUESTION_CATALOG
 
 conn = sqlite3.connect('backend/interview_platform.db')
@@ -11,7 +12,8 @@ print("Existing roles in database:", cursor.fetchall())
 total_added = 0
 for role_name, q_list in ROLE_QUESTION_CATALOG.items():
     for q in q_list:
-        qid = f"q_seed_{role_name.lower().replace(' ', '_').replace('/', '_')[:10]}_{abs(hash(q['question'])) % 100000}"
+        q_hash = hashlib.sha256(q['question'].encode('utf-8')).hexdigest()[:8]
+        qid = f"q_seed_{role_name.lower().replace(' ', '_').replace('/', '_')[:10]}_{q_hash}"
         cursor.execute("""
             INSERT OR REPLACE INTO questions (
                 id, role, category, question_text, ideal_answer,
