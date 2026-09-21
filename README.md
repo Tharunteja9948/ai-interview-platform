@@ -38,45 +38,28 @@
 
 ---
 
-## 🚀 1-Click Cloud Deployment Options
+## 🚀 Quick Deployment Guide
 
-### Option 1: Render.com (Recommended — 100% Free Web Service)
-1. Push this repository to **GitHub**.
-2. Go to **[render.com](https://render.com/)** → Click **New** → **Web Service** → Connect your GitHub repository.
-3. Render will auto-detect `render.yaml` or set:
+### Deploy Online (Render.com)
+1. In **[render.com](https://render.com/)**, click **New +** → **Web Service** → Select your GitHub repository.
+2. Render auto-configures from `render.yaml`:
    - **Runtime**: `Python 3`
-   - **Build Command**: `npm --prefix frontend install && npm --prefix frontend run build && pip install -r requirements.txt && python seed_roles.py`
+   - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
-4. Click **Deploy**. Your app will be live at `https://your-app-name.onrender.com`.
+3. Click **Deploy**. Your platform is live in ~30 seconds!
 
-### Option 2: Docker Containerization
+---
+
+## 💻 Run Locally
+
 ```bash
-# Build the unified production image
-docker build -t ai-interview-platform .
-
-# Run the container
-docker run -p 8000:8000 ai-interview-platform
-```
-Open `http://localhost:8000` in your browser.
-
-### Option 3: Local Production Server
-```bash
-# 1. Build the React frontend
-cd frontend
-npm install
-npm run build
-cd ..
-
-# 2. Install backend dependencies
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 3. Seed questions & roles
-python seed_roles.py
-
-# 4. Start the unified production server
+# 2. Start the unified platform (serves both API & Frontend)
 python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ```
-Open `http://127.0.0.1:8000`.
+Open **`http://127.0.0.1:8000`** in your browser.
 
 ---
 
@@ -84,27 +67,28 @@ Open `http://127.0.0.1:8000`.
 
 | Role | Username | Password | Purpose |
 |---|---|---|---|
-| **Student** | `rahul_sde` | `pass123` | Full student experience, mock interviews, radar charts, evolution word diff |
-| **Faculty / HOD** | `faculty_hod` | `admin123` | Batch-level analytics, cohort weakness heatmaps, accreditation & placement insights |
+| **Student** | `rahul_sde` | `pass123` | Full interview studio, AI interviewer, radar charts, and word-diff evolution |
+| **Faculty / HOD** | `faculty_hod` | `admin123` | Batch-level skill analytics, cohort weakness heatmaps, and placement insights |
 
 ---
 
-## 📁 Repository Structure
+## 📁 Clean Repository Structure
+
 ```
 ai-interview-platform/
 ├── backend/
-│   ├── main.py              # Unified FastAPI server & SPA static mount
-│   ├── database.py          # SQLite schema & DB connection
-│   ├── auth.py              # Student/Faculty authentication
-│   └── services/            # Adaptive routing, evaluation, skill profiles
+│   ├── main.py              # Unified FastAPI server & React SPA mount
+│   ├── database.py          # SQLite schema & database connection
+│   ├── auth.py              # User authentication & roles
+│   ├── interview_platform.db # Pre-seeded SQLite database
+│   └── services/            # Adaptive routing, 11-role catalogs, and rubric scoring
 ├── frontend/
-│   ├── src/                 # React 18 + Tailwind CSS + Framer Motion components
+│   ├── dist/                # Pre-compiled production web app
+│   ├── src/                 # React UI components
 │   └── package.json         # Frontend dependencies
-├── Dockerfile               # Production multi-stage Docker build
-├── render.yaml              # 1-Click Render Cloud deployment spec
-├── Procfile                 # Railway / Heroku deployment spec
-├── vercel.json              # Vercel deployment spec
-├── requirements.txt         # Production Python packages
+├── Dockerfile               # Container build configuration
+├── render.yaml              # Render cloud deployment specification
+├── requirements.txt         # Production Python dependencies
 ├── seed_roles.py            # Question bank & roles seeder
 └── README.md
 ```
