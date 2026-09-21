@@ -588,7 +588,7 @@ export default function CompanySetupWizard({ user, onLaunchInterview, onBackToDa
               </div>
 
               <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400">
-                💡 <span className="text-slate-300 font-medium">Batch 1 Research Note:</span> Testing both modes lets you demonstrate the empirical learning gain difference to external examiners.
+                💡 <span className="text-slate-300 font-medium">Pro-Tip:</span> Practice in Adaptive mode to target your specific weaknesses and accelerate learning gains.
               </div>
             </div>
           </div>

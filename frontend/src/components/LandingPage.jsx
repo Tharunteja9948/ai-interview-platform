@@ -298,7 +298,7 @@ export default function LandingPage({ onNavigateToAuth, themeMode, onThemeChange
       {/* Footer */}
       <footer className={`border-t ${footerBorder} py-6 px-6 text-center text-xs ${textMuted} font-mono relative z-10`}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span>B.Tech CSE Final Year Project • Self-Learning AI Interview Platform</span>
+          <span>Self-Learning AI Interview Platform • Adaptive Technical Interview Intelligence</span>
           <span className={textSecondary}>© 2026 InterviewAI</span>
         </div>
       </footer>

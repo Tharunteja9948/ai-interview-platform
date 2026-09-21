@@ -239,7 +239,7 @@ export default function App() {
                 Self-Learning AI Interview Platform
               </span>
               <span className="text-[10px] text-slate-400 font-mono block">
-                B.Tech CSE Final Year Project • Batch 1
+                Adaptive Placement Intelligence
               </span>
             </div>
           </div>
@@ -342,13 +342,13 @@ export default function App() {
               Faculty Analytics
             </button>
 
-            {/* 7-Min Viva Demo Guide Button */}
+            {/* Platform Demo Guide Button */}
             <button
               onClick={() => setShowVivaModal(true)}
               className="px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center gap-1 hover:bg-amber-500/25 transition ml-1"
             >
               <GraduationCap size={14} />
-              7-Min Viva Guide
+              Platform Demo Guide
             </button>
           </nav>
 
@@ -456,8 +456,8 @@ export default function App() {
                   <GraduationCap size={20} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">7-Minute Viva Live Demonstration Script</h3>
-                  <span className="text-[11px] text-slate-400 font-mono">Guide Section 17 • Step-by-Step Examiner Sequence</span>
+                  <h3 className="text-base font-bold text-white">7-Minute Platform Interactive Walkthrough</h3>
+                  <span className="text-[11px] text-slate-400 font-mono">Interactive Feature Tour & Evaluation Pipeline</span>
                 </div>
               </div>
               <button 
@@ -476,8 +476,8 @@ export default function App() {
                 { time: '3:15 - 4:00', title: '4. Instant 8-Dimension Evaluation', desc: 'Click Evaluate & Re-route. Show 8-dimension scorecard and the explainable Google Maps re-routing rationale.' },
                 { time: '4:00 - 5:00', title: '5. Targeted Remediation Question #2', desc: 'Show that Question #2 specifically targets the diagnosed weak competency with Senior Alumni tip guidance.' },
                 { time: '5:00 - 5:45', title: '6. Visual Word Evolution Diff', desc: 'Show side-by-side transcripts with Green highlights for added technical terms and Red strikethroughs for eliminated fillers.' },
-                { time: '5:45 - 6:30', title: '7. Adaptive vs. Static Study Benchmark', desc: 'Switch to Adaptive vs Static tab. Prove Batch 1 Pitch hypothesis (+0.86 vs +0.14 gain, p < 0.01).' },
-                { time: '6:30 - 7:00', title: '8. Faculty Analytics & Viva Close', desc: 'Open Faculty Analytics. Show anonymized cohort gaps for TPO. Recite the One-Sentence Viva Definition.' }
+                { time: '5:45 - 6:30', title: '7. Adaptive vs. Static Study Benchmark', desc: 'Switch to Adaptive vs Static tab. Review empirical learning gain hypothesis (+0.86 vs +0.14 gain, p < 0.01).' },
+                { time: '6:30 - 7:00', title: '8. Faculty Analytics & Wrap-up', desc: 'Open Faculty Analytics. Show anonymized cohort gaps for TPO. Review core platform architecture.' }
               ].map((step, idx) => (
                 <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
                   <span className="text-[10px] font-mono px-2 py-1 rounded bg-slate-800 text-cyan-300 shrink-0 font-bold">
@@ -492,7 +492,7 @@ export default function App() {
             </div>
 
             <div className="p-3.5 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-[11px] text-cyan-200">
-              <b>One-Sentence Viva Definition:</b> "We developed a self-learning interview coach that builds a personalized competency profile from a student’s spoken answers, uses detected weaknesses to re-route the next practice questions, and measures how the student’s answers evolve across repeated interviews."
+              <b>Platform Core Architecture:</b> "We developed an adaptive AI interview coach that builds a personalized competency profile from a student’s spoken answers, uses diagnosed weaknesses to re-route practice questions dynamically, and measures answer evolution across repeated interviews."
             </div>
 
             <div className="flex justify-end pt-2">

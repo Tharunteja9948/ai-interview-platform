@@ -1,6 +1,5 @@
 # 🎙️ Self-Learning AI Interview Platform
-> **B.Tech CSE Final Year Project • Batch 1**  
-> *A Self-Learning AI Mock Interview Coach with Real-World Drive Feedback, Anti-Cheat Proctoring, and Adaptive Skill Remediation.*
+> *An Adaptive AI Mock Interview Coach with Real-World Drive Feedback, Anti-Cheat Proctoring, and Dynamic Skill Remediation.*
 
 ---
 
